@@ -1,0 +1,16 @@
+{
+  "name": "be_learning",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/NguyenNgocHuongGiang/BE-learning.git",
+  "author": "S52100019 <52100019@student.tdtu.edu.vn>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7"
+  }
+}
