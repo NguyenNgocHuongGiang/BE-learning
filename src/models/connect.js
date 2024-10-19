@@ -1,13 +1,14 @@
 import {Sequelize} from 'sequelize'
+import configDb from "./../config/connect_db.js"
 
 const sequelize = new Sequelize(
-    'db_spotify',
-    'root',
-    '1234',
+    configDb.database,
+    configDb.user,
+    configDb.pass,
     {
-        host: 'localhost',
-        port: 3306,
-        dialect: 'mysql'
+        host: configDb.host,
+        port: configDb.port,
+        dialect: configDb.dialect
     }
 )
 

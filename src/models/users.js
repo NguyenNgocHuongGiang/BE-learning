@@ -1,58 +1,51 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class User extends Model {
+export default class users extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    userId: {
+    user_id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    account: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    name: {
+    full_name: {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    nationality: {
+    email: {
       type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    chanalName: {
-      type: DataTypes.STRING(255),
-      allowNull: true
+      allowNull: true,
+      unique: "email"
     },
     avatar: {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    desciption: {
+    pass_word: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    face_app_id: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    role_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'role',
+        key: 'role_id'
+      }
+    },
+    refresh_token: {
       type: DataTypes.TEXT,
-      allowNull: true
-    },
-    refreshToken: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    password: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    banner: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    role: {
-      type: DataTypes.STRING(50),
       allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'User',
+    tableName: 'users',
     timestamps: false,
     indexes: [
       {
@@ -60,7 +53,22 @@ export default class User extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "userId" },
+          { name: "user_id" },
+        ]
+      },
+      {
+        name: "email",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "email" },
+        ]
+      },
+      {
+        name: "role_id",
+        using: "BTREE",
+        fields: [
+          { name: "role_id" },
         ]
       },
     ]

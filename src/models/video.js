@@ -1,38 +1,54 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class ListFriends extends Model {
+export default class video extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    id: {
+    video_id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'User',
-        key: 'userId'
-      }
-    },
-    friendId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'User',
-        key: 'userId'
-      }
-    },
-    roomChat: {
-      type: DataTypes.STRING(50),
+    video_name: {
+      type: DataTypes.STRING(255),
       allowNull: true
+    },
+    thumbnail: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    views: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    source: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'user_id'
+      }
+    },
+    type_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'video_type',
+        key: 'type_id'
+      }
     }
   }, {
     sequelize,
-    tableName: 'ListFriends',
+    tableName: 'video',
     timestamps: false,
     indexes: [
       {
@@ -40,21 +56,21 @@ export default class ListFriends extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "id" },
+          { name: "video_id" },
         ]
       },
       {
-        name: "idUser",
+        name: "user_id",
         using: "BTREE",
         fields: [
-          { name: "userId" },
+          { name: "user_id" },
         ]
       },
       {
-        name: "friendId",
+        name: "type_id",
         using: "BTREE",
         fields: [
-          { name: "friendId" },
+          { name: "type_id" },
         ]
       },
     ]

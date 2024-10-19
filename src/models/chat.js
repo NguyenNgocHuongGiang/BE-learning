@@ -1,39 +1,34 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class Message extends Model {
+export default class chat extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    idMess: {
+    id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    idSender: {
+    user_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      comment: "useSender",
-      references: {
-        model: 'User',
-        key: 'userId'
-      }
-    },
-    contentMess: {
-      type: DataTypes.TEXT,
       allowNull: true
     },
-    timeSend: {
+    content: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    room_id: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    date: {
       type: DataTypes.DATE,
-      allowNull: true
-    },
-    roomChat: {
-      type: DataTypes.STRING(100),
       allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'Message',
+    tableName: 'chat',
     timestamps: false,
     indexes: [
       {
@@ -41,14 +36,7 @@ export default class Message extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "idMess" },
-        ]
-      },
-      {
-        name: "idUser",
-        using: "BTREE",
-        fields: [
-          { name: "idSender" },
+          { name: "id" },
         ]
       },
     ]

@@ -1,42 +1,26 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class Playlists extends Model {
+export default class video_type extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    id: {
+    type_id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'User',
-        key: 'userId'
-      }
-    },
-    imagePath: {
+    type_name: {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    playlistName: {
+    icon: {
       type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    createDate: {
-      type: DataTypes.DATE,
       allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'Playlists',
+    tableName: 'video_type',
     timestamps: false,
     indexes: [
       {
@@ -44,14 +28,7 @@ export default class Playlists extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "userId",
-        using: "BTREE",
-        fields: [
-          { name: "userId" },
+          { name: "type_id" },
         ]
       },
     ]

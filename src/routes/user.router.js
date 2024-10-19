@@ -1,10 +1,14 @@
 import exxpress from "express";
-import { createUser, getUser } from "../controllers/user.controller.js";
+import { createUser, deleteUser, getUser, updateUser } from "../controllers/user.controller.js";
 
 const userRoutes = exxpress.Router();
 
-userRoutes.post("/:id/:name", createUser);
+userRoutes.post("/create-user", createUser);
+
+userRoutes.delete("/delete-user/:user_id", deleteUser);
 
 userRoutes.get("/get-user", getUser);
+
+userRoutes.put("/update-user/:user_id", updateUser);
 
 export default userRoutes;

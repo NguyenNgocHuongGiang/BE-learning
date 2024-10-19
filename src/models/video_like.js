@@ -1,34 +1,42 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class Following extends Model {
+export default class video_like extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    id: {
+    like_id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    userId: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'User',
-        key: 'userId'
+        model: 'users',
+        key: 'user_id'
       }
     },
-    followingId: {
+    video_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'User',
-        key: 'userId'
+        model: 'video',
+        key: 'video_id'
       }
+    },
+    date_create: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    dis_like: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'Following',
+    tableName: 'video_like',
     timestamps: false,
     indexes: [
       {
@@ -36,21 +44,21 @@ export default class Following extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "id" },
+          { name: "like_id" },
         ]
       },
       {
-        name: "userId",
+        name: "user_id",
         using: "BTREE",
         fields: [
-          { name: "userId" },
+          { name: "user_id" },
         ]
       },
       {
-        name: "followingUserId",
+        name: "video_id",
         using: "BTREE",
         fields: [
-          { name: "followingId" },
+          { name: "video_id" },
         ]
       },
     ]
