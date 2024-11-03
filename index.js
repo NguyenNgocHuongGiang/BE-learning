@@ -1,10 +1,17 @@
 import express from "express";
 import rootRoutes from "./src/routes/root.router.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
+
+//them middleware de get info cookie
+app.use(cookieParser())
 
 // them middleware de doc json
 app.use(express.json());

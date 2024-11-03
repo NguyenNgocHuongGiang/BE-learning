@@ -1,3 +1,7 @@
 node_modules
 .txt
 .env
+access_token.private.key
+access_token.public.key
+refresh_token.private.key
+refresh_token.public.key
