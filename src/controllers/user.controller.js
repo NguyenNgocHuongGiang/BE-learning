@@ -1,8 +1,10 @@
 import initModels from "./../models/init-models.js";
 import sequelize from "./../models/connect.js";
 import { Op } from "sequelize"; // operator: toan tu (like and in or)
+import {PrismaClient} from '@prisma/client'
 
 const model = initModels(sequelize);
+const prisma = new PrismaClient()
 
 const createUser = async (req, res) => {
   // let params = req.params;
@@ -23,21 +25,32 @@ const createUser = async (req, res) => {
     });
     return res.status(201).json(newUser);
   } catch (error) {
-    return res.status(INTERNAL_SERVER).json({ message: "error" });
+    return res.status(500).json({ message: "error" });
   }
 };
 
 const deleteUser = async (req, res) => {
   try {
     let {user_id} = req.params 
-    let user = await model.users.findByPk(user_id)
+    // let user = await model.users.findByPk(user_id)
+    let user = await prisma.users.findFirst({
+      where: {
+        user_id: Number(user_id)
+      }
+    })
+
     if(!user){
       return res.status(404).json({message: "user not found"})
     }
-    user.destroy()
-    return res.status(OK).json({message: "user deleted"})
+    // user.destroy()
+    await prisma.users.delete({
+      where: {
+        user_id: Number(user_id)
+      }
+    })
+    return res.status(200).json({message: "user deleted"})
   } catch (error) {
-    return res.status(INTERNAL_SERVER).message("error")
+    return res.status(500).message("error")
   }
 }
 
@@ -46,22 +59,38 @@ const updateUser = async (req, res) => {
     let {user_id} = req.params 
     const {full_name, pass_word} = req.body;
     //check xem co khong
-    let user = await model.users.findByPk(user_id)
+    // let user = await model.users.findByPk(user_id)
     // let user = await model.users.findOne({
     //   where: {user_id}
     // })
+    let user = await prisma.users.findFirst({
+      where: {
+        user_id: Number(user_id)
+      }
+    })
+
     if(!user){
       return res.status(404).json({message: "user not found"})
     }
-    await model.users.update(
-      {full_name, pass_word},
-      {
-        where: {user_id}
-      }
-    )
-    return res.status(OK).json({message: "user updated"})
+    // await model.users.update(
+    //   {full_name, pass_word},
+    //   {
+    //     where: {user_id}
+    //   }
+    // )
+    console.log(user);
+    
+    await prisma.users.update(
+        {
+          data: {full_name, pass_word},
+          where: {
+            user_id: Number(user_id)
+          }
+        }
+      )
+    return res.status(200).json({message: "user updated"})
   } catch (error) {
-    return res.status(INTERNAL_SERVER).json({message: "error"})
+    return res.status(500).json({message: "error"})
   }
 }
 
@@ -89,9 +118,9 @@ const getUser = async (req, res) => {
         },
       ],
     });
-    return res.status(OK).json(data);
+    return res.status(200).json(data);
   } catch (error) {
-    return res.status(INTERNAL_SERVER).json({ message: "error" });
+    return res.status(500).json({ message: "error" });
   }
 };
 

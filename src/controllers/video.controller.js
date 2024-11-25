@@ -1,12 +1,15 @@
 import initModels from "./../models/init-models.js";
 import sequelize from "./../models/connect.js";
 import { Op, where } from "sequelize"; // operator: toan tu (like and in or)
+import {PrismaClient} from '@prisma/client'
 
 const model = initModels(sequelize);
+const prisma = new PrismaClient()
 
 const getListVideo = async (req, res) => {
     try {
-        let data = await model.video.findAll()
+        // let data = await model.video.findAll()
+        let data = await prisma.video.findMany()
         return res.status(200).json(data)        
     } catch (error) {
         return res.status(500).json({message: "error"})
@@ -15,7 +18,8 @@ const getListVideo = async (req, res) => {
 
 const getType= async (req, res) => {
     try {
-        let data = await model.video_type.findAll()
+        // let data = await model.video_type.findAll()
+        let data = await prisma.video_type.findMany()
         return res.status(200).json(data)        
     } catch (error) {
         return res.status(500).json({message: "error"})
@@ -25,9 +29,14 @@ const getType= async (req, res) => {
 const getListVideoType = async (req,res) => {
     try {
         let {typeId} = req.params
-        let data = await model.video.findAll({
+        // let data = await model.video.findAll({
+        //     where: {
+        //         type_Id: typeId
+        //     }
+        // })
+        let data = await prisma.video.findMany({
             where: {
-                type_Id: typeId
+                type_Id: Number(typeId)
             }
         })
         return res.status(200).json(data)        
