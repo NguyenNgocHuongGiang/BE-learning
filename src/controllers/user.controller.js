@@ -1,10 +1,10 @@
 import initModels from "./../models/init-models.js";
 import sequelize from "./../models/connect.js";
 import { Op } from "sequelize"; // operator: toan tu (like and in or)
-import {PrismaClient} from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 
 const model = initModels(sequelize);
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const createUser = async (req, res) => {
   // let params = req.params;
@@ -17,7 +17,7 @@ const createUser = async (req, res) => {
 
   // lay data thi body req
   try {
-    const {full_name, email, pass_word} = req.body;
+    const { full_name, email, pass_word } = req.body;
     let newUser = await model.users.create({
       full_name,
       email,
@@ -31,33 +31,33 @@ const createUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    let {user_id} = req.params 
+    let { user_id } = req.params;
     // let user = await model.users.findByPk(user_id)
     let user = await prisma.users.findFirst({
       where: {
-        user_id: Number(user_id)
-      }
-    })
+        user_id: Number(user_id),
+      },
+    });
 
-    if(!user){
-      return res.status(404).json({message: "user not found"})
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
     }
     // user.destroy()
     await prisma.users.delete({
       where: {
-        user_id: Number(user_id)
-      }
-    })
-    return res.status(200).json({message: "user deleted"})
+        user_id: Number(user_id),
+      },
+    });
+    return res.status(200).json({ message: "user deleted" });
   } catch (error) {
-    return res.status(500).message("error")
+    return res.status(500).message("error");
   }
-}
+};
 
 const updateUser = async (req, res) => {
   try {
-    let {user_id} = req.params 
-    const {full_name, pass_word} = req.body;
+    let { user_id } = req.params;
+    const { full_name, pass_word } = req.body;
     //check xem co khong
     // let user = await model.users.findByPk(user_id)
     // let user = await model.users.findOne({
@@ -65,12 +65,12 @@ const updateUser = async (req, res) => {
     // })
     let user = await prisma.users.findFirst({
       where: {
-        user_id: Number(user_id)
-      }
-    })
+        user_id: Number(user_id),
+      },
+    });
 
-    if(!user){
-      return res.status(404).json({message: "user not found"})
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
     }
     // await model.users.update(
     //   {full_name, pass_word},
@@ -79,20 +79,18 @@ const updateUser = async (req, res) => {
     //   }
     // )
     console.log(user);
-    
-    await prisma.users.update(
-        {
-          data: {full_name, pass_word},
-          where: {
-            user_id: Number(user_id)
-          }
-        }
-      )
-    return res.status(200).json({message: "user updated"})
+
+    await prisma.users.update({
+      data: { full_name, pass_word },
+      where: {
+        user_id: Number(user_id),
+      },
+    });
+    return res.status(200).json({ message: "user updated" });
   } catch (error) {
-    return res.status(500).json({message: "error"})
+    return res.status(500).json({ message: "error" });
   }
-}
+};
 
 const getUser = async (req, res) => {
   try {
@@ -124,6 +122,33 @@ const getUser = async (req, res) => {
   }
 };
 
+const uploadAvatar = async (req, res) => {
+  try {
+    let file = req.file;
+    let userId = req.body.userId;
+    // console.log(userId);
+    
+    let user = await prisma.users.findFirst({
+      where: { user_id: Number(userId) },
+    });
+    
+
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+    let avatarPath = `/public/imgs/${file.filename}`;
+    await prisma.users.update({
+      data: { avatar: avatarPath },
+      where: { user_id: Number(userId) },
+    });
+    return res.status(200).json({data: avatarPath, message: "update successfully" });
+  } catch (error) {
+    console.log(error);
+    
+    return res.status(500).json({ message: "error upload" });
+  }
+};
+
 /** Lay user co ten like John map voi table video lay thuoc tinh videoname va videoid
  * OUTPUT
  * {
@@ -150,4 +175,4 @@ const getUser = async (req, res) => {
     },
  */
 
-export { createUser, getUser, deleteUser, updateUser };
+export { createUser, getUser, deleteUser, updateUser, uploadAvatar };

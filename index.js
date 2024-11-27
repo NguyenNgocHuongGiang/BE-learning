@@ -5,6 +5,9 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+// define middleware public hinh
+app.use(express.static("."))
+
 app.use(cors({
   origin: "http://localhost:3000",
   credentials: true
