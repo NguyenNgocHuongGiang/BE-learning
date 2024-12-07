@@ -1,4 +1,5 @@
-export declare class CreateVideoDto {
+export declare class VideoDto {
+    video_id: number;
     video_name: string;
     thumbnail: string;
     description: string;
@@ -6,4 +7,5 @@ export declare class CreateVideoDto {
     source: string;
     user_id: number;
     type_id: number;
+    constructor(partial: Partial<VideoDto>);
 }

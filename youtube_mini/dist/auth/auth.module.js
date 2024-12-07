@@ -6,18 +6,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VideoModule = void 0;
+exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
-const video_service_1 = require("./video.service");
-const video_controller_1 = require("./video.controller");
+const auth_service_1 = require("./auth.service");
+const auth_controller_1 = require("./auth.controller");
+const jwt_1 = require("@nestjs/jwt");
 const jwt_strategy_1 = require("../strategy/jwt.strategy");
-let VideoModule = class VideoModule {
+let AuthModule = class AuthModule {
 };
-exports.VideoModule = VideoModule;
-exports.VideoModule = VideoModule = __decorate([
+exports.AuthModule = AuthModule;
+exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
-        controllers: [video_controller_1.VideoController],
-        providers: [video_service_1.VideoService, jwt_strategy_1.JwtStrategy],
+        imports: [jwt_1.JwtModule.register({})],
+        controllers: [auth_controller_1.AuthController],
+        providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],
     })
-], VideoModule);
-//# sourceMappingURL=video.module.js.map
+], AuthModule);
+//# sourceMappingURL=auth.module.js.map

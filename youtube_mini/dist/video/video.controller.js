@@ -17,16 +17,21 @@ const common_1 = require("@nestjs/common");
 const video_service_1 = require("./video.service");
 const create_video_dto_1 = require("./dto/create-video.dto");
 const update_video_dto_1 = require("./dto/update-video.dto");
+const swagger_1 = require("@nestjs/swagger");
+const passport_1 = require("@nestjs/passport");
 let VideoController = class VideoController {
     constructor(videoService) {
         this.videoService = videoService;
     }
-    create(createVideoDto, res) {
-        return res.status(common_1.HttpStatus.CREATED).json(createVideoDto);
+    async create(createVideoDto, res) {
+        let newVideo = await this.videoService.create(createVideoDto);
+        return res.status(common_1.HttpStatus.CREATED).json(newVideo);
     }
     async findAll(page, size, keyword, res, token) {
         try {
-            let videos = await this.videoService.findAll();
+            let formatPage = page ? Number(page) : 1;
+            let formatSize = size ? Number(size) : 10;
+            let videos = await this.videoService.findAll(formatPage, formatSize, keyword);
             return res.status(common_1.HttpStatus.OK).json(videos);
         }
         catch (error) {
@@ -45,15 +50,23 @@ let VideoController = class VideoController {
 };
 exports.VideoController = VideoController;
 __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Post)('/create-video'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_video_dto_1.CreateVideoDto, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], VideoController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)('/get-videos'),
+    (0, swagger_1.ApiQuery)({ name: "page", required: false, type: Number }),
+    (0, swagger_1.ApiQuery)({ name: "size", required: false, type: Number }),
+    (0, swagger_1.ApiQuery)({ name: "keyword", required: false, type: String }),
+    (0, swagger_1.ApiHeader)({ name: "token", required: false }),
+    (0, swagger_1.ApiResponse)({ status: common_1.HttpStatus.OK, description: "get successfullly" }),
+    (0, swagger_1.ApiResponse)({ status: common_1.HttpStatus.INTERNAL_SERVER_ERROR, description: "internal server" }),
     __param(0, (0, common_1.Query)('page')),
     __param(1, (0, common_1.Query)('size')),
     __param(2, (0, common_1.Query)('keyword')),
@@ -86,6 +99,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], VideoController.prototype, "remove", null);
 exports.VideoController = VideoController = __decorate([
+    (0, swagger_1.ApiTags)('Video'),
     (0, common_1.Controller)('video'),
     __metadata("design:paramtypes", [video_service_1.VideoService])
 ], VideoController);

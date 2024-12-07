@@ -9,16 +9,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VideoService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
+const video_dto_1 = require("./dto/video.dto");
+const class_transformer_1 = require("class-transformer");
 let VideoService = class VideoService {
     constructor() {
         this.prisma = new client_1.PrismaClient();
     }
-    create(createVideoDto) {
-        return 'This action adds a new video';
-    }
-    async findAll() {
+    async create(createVideoDto) {
         try {
-            return await this.prisma.video.findMany();
+            let newVideo = await this.prisma.video.create({
+                data: createVideoDto
+            });
+            return (0, class_transformer_1.plainToClass)(video_dto_1.VideoDto, newVideo);
+        }
+        catch (error) {
+            throw new Error(error);
+        }
+    }
+    async findAll(page, size, keyword) {
+        try {
+            let videos = await this.prisma.video.findMany({
+                where: keyword ? {
+                    video_name: {
+                        contains: keyword
+                    }
+                } : {},
+                skip: (page - 1) * size,
+                take: size
+            });
+            return videos.map(video => (0, class_transformer_1.plainToClass)(video_dto_1.VideoDto, video));
         }
         catch (error) {
             throw new Error(error);
